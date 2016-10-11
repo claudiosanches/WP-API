@@ -394,9 +394,9 @@ if ( ! function_exists( 'register_rest_field' ) ) {
 	 *
 	 * @param string|array $object_type Object(s) the field is being registered
 	 *                                  to, "post"|"term"|"comment" etc.
-	 * @param string $attribute         The attribute name.
-	 * @param array  $args {
-	 *     Optional. An array of arguments used to handle the registered field.
+	 * @param string       $attribute         The attribute name.
+	 * @param array        $args {
+	 *           Optional. An array of arguments used to handle the registered field.
 	 *
 	 *     @type string|array|null $get_callback    Optional. The callback function used to retrieve the field
 	 *                                              value. Default is 'null', the field will not be returned in
@@ -441,9 +441,9 @@ if ( ! function_exists( 'rest_validate_request_arg' ) ) {
 	/**
 	 * Validate a request argument based on details registered to the route.
 	 *
-	 * @param  mixed            $value
-	 * @param  WP_REST_Request  $request
-	 * @param  string           $param
+	 * @param  mixed           $value
+	 * @param  WP_REST_Request $request
+	 * @param  string          $param
 	 * @return WP_Error|boolean
 	 */
 	function rest_validate_request_arg( $value, $request, $param ) {
@@ -456,20 +456,20 @@ if ( ! function_exists( 'rest_validate_request_arg' ) ) {
 
 		if ( ! empty( $args['enum'] ) ) {
 			if ( ! in_array( $value, $args['enum'] ) ) {
-				return new WP_Error( 'rest_invalid_param', sprintf( __( '%s is not one of %s' ), $param, implode( ', ', $args['enum'] ) ) );
+				return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s is not one of %1$s' ), $param, implode( ', ', $args['enum'] ) ) );
 			}
 		}
 
 		if ( 'integer' === $args['type'] && ! is_numeric( $value ) ) {
-			return new WP_Error( 'rest_invalid_param', sprintf( __( '%s is not of type %s' ), $param, 'integer' ) );
+			return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s is not of type %1$s' ), $param, 'integer' ) );
 		}
 
 		if ( 'boolean' === $args['type'] && ! rest_is_boolean( $value ) ) {
-			return new WP_Error( 'rest_invalid_param', sprintf( __( '%s is not of type %s' ), $value, 'boolean' ) );
+			return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s is not of type %1$s' ), $value, 'boolean' ) );
 		}
 
 		if ( 'string' === $args['type'] && ! is_string( $value ) ) {
-			return new WP_Error( 'rest_invalid_param', sprintf( __( '%s is not of type %s' ), $param, 'string' ) );
+			return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s is not of type %1$s' ), $param, 'string' ) );
 		}
 
 		if ( isset( $args['format'] ) ) {
@@ -496,32 +496,32 @@ if ( ! function_exists( 'rest_validate_request_arg' ) ) {
 		if ( in_array( $args['type'], array( 'numeric', 'integer' ) ) && ( isset( $args['minimum'] ) || isset( $args['maximum'] ) ) ) {
 			if ( isset( $args['minimum'] ) && ! isset( $args['maximum'] ) ) {
 				if ( ! empty( $args['exclusiveMinimum'] ) && $value <= $args['minimum'] ) {
-					return new WP_Error( 'rest_invalid_param', sprintf( __( '%s must be greater than %d (exclusive)' ), $param, $args['minimum'] ) );
-				} else if ( empty( $args['exclusiveMinimum'] ) && $value < $args['minimum'] ) {
-					return new WP_Error( 'rest_invalid_param', sprintf( __( '%s must be greater than %d (inclusive)' ), $param, $args['minimum'] ) );
+					return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s must be greater than %2$d (exclusive)' ), $param, $args['minimum'] ) );
+				} elseif ( empty( $args['exclusiveMinimum'] ) && $value < $args['minimum'] ) {
+					return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s must be greater than %2$d (inclusive)' ), $param, $args['minimum'] ) );
 				}
-			} else if ( isset( $args['maximum'] ) && ! isset( $args['minimum'] ) ) {
+			} elseif ( isset( $args['maximum'] ) && ! isset( $args['minimum'] ) ) {
 				if ( ! empty( $args['exclusiveMaximum'] ) && $value >= $args['maximum'] ) {
-					return new WP_Error( 'rest_invalid_param', sprintf( __( '%s must be less than %d (exclusive)' ), $param, $args['maximum'] ) );
-				} else if ( empty( $args['exclusiveMaximum'] ) && $value > $args['maximum'] ) {
-					return new WP_Error( 'rest_invalid_param', sprintf( __( '%s must be less than %d (inclusive)' ), $param, $args['maximum'] ) );
+					return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s must be less than %2$d (exclusive)' ), $param, $args['maximum'] ) );
+				} elseif ( empty( $args['exclusiveMaximum'] ) && $value > $args['maximum'] ) {
+					return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s must be less than %2$d (inclusive)' ), $param, $args['maximum'] ) );
 				}
-			} else if ( isset( $args['maximum'] ) && isset( $args['minimum'] ) ) {
+			} elseif ( isset( $args['maximum'] ) && isset( $args['minimum'] ) ) {
 				if ( ! empty( $args['exclusiveMinimum'] ) && ! empty( $args['exclusiveMaximum'] ) ) {
 					if ( $value >= $args['maximum'] || $value <= $args['minimum'] ) {
-						return new WP_Error( 'rest_invalid_param', sprintf( __( '%s must be between %d (exclusive) and %d (exclusive)' ), $param, $args['minimum'], $args['maximum'] ) );
+						return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s must be between %2$d (exclusive) and %2$d (exclusive)' ), $param, $args['minimum'], $args['maximum'] ) );
 					}
-				} else if ( empty( $args['exclusiveMinimum'] ) && ! empty( $args['exclusiveMaximum'] ) ) {
+				} elseif ( empty( $args['exclusiveMinimum'] ) && ! empty( $args['exclusiveMaximum'] ) ) {
 					if ( $value >= $args['maximum'] || $value < $args['minimum'] ) {
-						return new WP_Error( 'rest_invalid_param', sprintf( __( '%s must be between %d (inclusive) and %d (exclusive)' ), $param, $args['minimum'], $args['maximum'] ) );
+						return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s must be between %2$d (inclusive) and %2$d (exclusive)' ), $param, $args['minimum'], $args['maximum'] ) );
 					}
-				} else if ( ! empty( $args['exclusiveMinimum'] ) && empty( $args['exclusiveMaximum'] ) ) {
+				} elseif ( ! empty( $args['exclusiveMinimum'] ) && empty( $args['exclusiveMaximum'] ) ) {
 					if ( $value > $args['maximum'] || $value <= $args['minimum'] ) {
-						return new WP_Error( 'rest_invalid_param', sprintf( __( '%s must be between %d (exclusive) and %d (inclusive)' ), $param, $args['minimum'], $args['maximum'] ) );
+						return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s must be between %2$d (exclusive) and %2$d (inclusive)' ), $param, $args['minimum'], $args['maximum'] ) );
 					}
-				} else if ( empty( $args['exclusiveMinimum'] ) && empty( $args['exclusiveMaximum'] ) ) {
+				} elseif ( empty( $args['exclusiveMinimum'] ) && empty( $args['exclusiveMaximum'] ) ) {
 					if ( $value > $args['maximum'] || $value < $args['minimum'] ) {
-						return new WP_Error( 'rest_invalid_param', sprintf( __( '%s must be between %d (inclusive) and %d (inclusive)' ), $param, $args['minimum'], $args['maximum'] ) );
+						return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s must be between %2$d (inclusive) and %2$d (inclusive)' ), $param, $args['minimum'], $args['maximum'] ) );
 					}
 				}
 			}
@@ -535,9 +535,9 @@ if ( ! function_exists( 'rest_sanitize_request_arg' ) ) {
 	/**
 	 * Sanitize a request argument based on details registered to the route.
 	 *
-	 * @param  mixed            $value
-	 * @param  WP_REST_Request  $request
-	 * @param  string           $param
+	 * @param  mixed           $value
+	 * @param  WP_REST_Request $request
+	 * @param  string          $param
 	 * @return mixed
 	 */
 	function rest_sanitize_request_arg( $value, $request, $param ) {
@@ -587,9 +587,9 @@ if ( ! function_exists( 'rest_parse_request_arg' ) ) {
 	 * Runs a validation check and sanitizes the value, primarily to be used via
 	 * the `sanitize_callback` arguments in the endpoint args registration.
 	 *
-	 * @param  mixed            $value
-	 * @param  WP_REST_Request  $request
-	 * @param  string           $param
+	 * @param  mixed           $value
+	 * @param  WP_REST_Request $request
+	 * @param  string          $param
 	 * @return mixed
 	 */
 	function rest_parse_request_arg( $value, $request, $param ) {
